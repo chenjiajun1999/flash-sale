@@ -29,10 +29,9 @@ public class StockConsumer {
      * 异常处理交给 Handler 会出现 Kafka ack 操作没有执行导致重复消费
      */
     @KafkaListener(topics = "FLASH_SALE_TOPIC")
-    public void listen(ConsumerRecord<String, String> record, Acknowledgment ack) {
+    public void listen(ConsumerRecord<String, String> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         String message = (String) kafkaMessage.get();
-        ack.acknowledge();
         Stock stock = JSON.parseObject(message, Stock.class);
         try {
             stockService.saleStock(stock);
